@@ -10,6 +10,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: salmanadir/microservices-demo
   DOCKERFILE: backend/backend/Dockerfile
+  DOCKER_CONTEXT: .   # <--- AJOUT
 
 jobs:
   ci:
@@ -25,7 +26,6 @@ jobs:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
 
-      # Détecte mvnw sinon mvn
       - name: Pick Maven command
         working-directory: ${{ env.WORKING_DIR }}
         shell: bash
@@ -77,8 +77,8 @@ jobs:
       - name: Build image & (conditionally) push
         uses: docker/build-push-action@v6
         with:
-          context: ${{ env.WORKING_DIR }}
-          file: ${{ env.DOCKERFILE }}
+          context: ${{ env.DOCKER_CONTEXT }}  
+          file: ${{ env.DOCKERFILE }}        
           push: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
