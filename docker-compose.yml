@@ -1,0 +1,21 @@
+# Production docker-compose.yml — generated
+version: '3.8'
+services:
+  backend/backend-backend:
+    image: ghcr.io/salmanadir/microservices-demo-backend-0:latest
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - JAVA_OPTS=-Xmx512m -Xms256m
+  frontend-frontend:
+    image: ghcr.io/salmanadir/microservices-demo-frontend-1:latest
+    restart: unless-stopped
+    depends_on:
+      - backend/backend-backend
+    ports:
+      - '80:80'
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=${API_URL}
